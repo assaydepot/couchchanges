@@ -56,6 +56,7 @@ class CouchChanges
 
     hash = JSON.parse(line)
     if hash["last_seq"]
+      @last_seq = hash["last_seq"]
       disconnected
     else
       hash["rev"] = hash.delete("changes")[0]["rev"]
