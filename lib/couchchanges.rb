@@ -6,7 +6,7 @@ class CouchChanges
   def initialize options={}
     @options = options.dup
     @uri = URI.parse(@options.delete(:url) + "/_changes")
-    @last_seq = 0
+    @last_seq = options[:since] || 0
   end
 
   def change &block
@@ -56,7 +56,6 @@ class CouchChanges
 
     hash = JSON.parse(line)
     if hash["last_seq"]
-      @last_seq = hash["last_seq"]
       disconnected
     else
       hash["rev"] = hash.delete("changes")[0]["rev"]
