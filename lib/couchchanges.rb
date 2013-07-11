@@ -47,21 +47,25 @@ class CouchChanges
     if @uri.user
       options[:head] = {'authorization' => [@uri.user, @uri.password]}
     end
-    
+
     EM::HttpRequest.new(@uri.to_s).get(options)
   end
 
   def handle line
     return if line.chomp.empty?
 
-    hash = JSON.parse(line)
-    if hash["last_seq"]
-      disconnected
-    else
-      hash["rev"] = hash.delete("changes")[0]["rev"]
-      @last_seq = hash["seq"]
+    begin
+      hash = JSON.parse(line)
+      if hash["last_seq"]
+        disconnected
+      else
+        hash["rev"] = hash.delete("changes")[0]["rev"]
+        @last_seq = hash["seq"]
 
-      callbacks hash
+        callbacks hash
+      end
+    rescue Exception => e
+      Airbrake.notify(e, :session => {:line => line.inspect, :hash => hash.inspect})
     end
   end
 
