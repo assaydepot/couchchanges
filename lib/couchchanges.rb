@@ -44,9 +44,6 @@ class CouchChanges
       :timeout => 0,
       :query   => @options.merge({:feed => "continuous"})
     }
-    if @uri.user
-      options[:head] = {'authorization' => [@uri.user, @uri.password]}
-    end
     
     EM::HttpRequest.new(@uri.to_s).get(options)
   end
