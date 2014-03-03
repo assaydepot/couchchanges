@@ -44,7 +44,7 @@ class CouchChanges
       :timeout => 0,
       :query   => @options.merge({:feed => "continuous"})
     }
-    
+
     EM::HttpRequest.new(@uri.to_s).get(options)
   end
 
@@ -55,6 +55,11 @@ class CouchChanges
     if hash["last_seq"]
       disconnected
     else
+      if hash["changes"].blank? || hash["changes"][0].blank?
+        File.open("/home/ubuntu/couchchanged_debug.log", 'a') do |f|
+          f.puts hash.inspect
+        end
+      end
       hash["rev"] = hash.delete("changes")[0]["rev"]
       @last_seq = hash["seq"]
 
