@@ -59,8 +59,9 @@ class CouchChanges
         File.open("/home/ubuntu/couchchanged_debug.log", 'a') do |f|
           f.puts hash.inspect
         end
+      else
+        hash["rev"] = hash.delete("changes")[0]["rev"]
       end
-      hash["rev"] = hash.delete("changes")[0]["rev"]
       @last_seq = hash["seq"]
 
       callbacks hash
