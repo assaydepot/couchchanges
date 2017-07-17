@@ -56,7 +56,7 @@ class CouchChanges
       disconnected
     else
       if hash["changes"].blank? || hash["changes"][0].blank?
-        File.open("/home/ubuntu/couchchanged_debug.log", 'a') do |f|
+        File.open("#{ENV["HOME"]}/couchchanged_debug.log", 'a') do |f|
           f.puts hash.inspect
         end
       else
